@@ -30,7 +30,7 @@ function handleGuardar() {
 <template>
   <div class="contenedor">
     <h1>Series</h1>
-    <Button label="Crear Nuevo" icon="pi pi-plus" @click="handleCreate" />
+    <Button label="Crear Nuevo" icon="pi pi-plus" @click="handleCreate" class="col-3" />
     <SeriesList ref="serieListRef" @edit="handleEdit" />
     <SeriesSave
       :mostrar="mostrarDialog"

@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import type { Pais } from '@/models/pais'
 import type { Serie } from '@/models/serie'
 import http from '@/plugins/axios'
-import { InputNumber } from 'primevue'
+import { DatePicker, InputNumber } from 'primevue'
 import Button from 'primevue/button'
 import Dialog from 'primevue/dialog'
+import Select from 'primevue/select'
 import InputText from 'primevue/inputtext'
 import { computed, ref, watch } from 'vue'
 
@@ -18,6 +20,8 @@ const props = defineProps({
 })
 const emit = defineEmits(['guardar', 'close'])
 
+const paises = ref<Pais[]>([])
+
 const dialogVisible = computed({
   get: () => props.mostrar,
   set: (value) => {
@@ -25,7 +29,13 @@ const dialogVisible = computed({
   },
 })
 
+const pais = ref<Pais>({} as Pais)
 const serie = ref<Serie>({ ...props.serie })
+
+async function obtenerPaises() {
+  paises.value = await http.get('paises').then((response) => response.data)
+}
+
 watch(
   () => props.serie,
   (newVal) => {
@@ -36,6 +46,7 @@ watch(
 async function handleSave() {
   try {
     const body = {
+      idPais: serie.value.paises.id,
       titulo: serie.value.titulo,
       sinopsis: serie.value.sinopsis,
       director: serie.value.director,
@@ -54,6 +65,19 @@ async function handleSave() {
     alert(error?.response?.data?.message)
   }
 }
+
+watch(
+  () => props.mostrar,
+  (nuevoValor) => {
+    if (nuevoValor) {
+      obtenerPaises()
+
+      if (props.serie.id) {
+        serie.value = { ...props.serie }
+      }
+    }
+  },
+)
 </script>
 
 <template>
@@ -64,7 +88,19 @@ async function handleSave() {
       style="width: 25rem"
     >
       <div class="flex items-center gap-4 mb-4">
-        <label for="titulo" class="font-semibold w-24">Titulo:</label>
+        <label for="pais" class="font-semibold w-3">Paises:</label>
+        <Select
+          id="pais"
+          v-model="serie.paises.id"
+          :options="paises"
+          optionLabel="descripcion"
+          optionValue="id"
+          class="flex-auto"
+          autofocus
+        />
+      </div>
+      <div class="flex items-center gap-4 mb-4">
+        <label for="titulo" class="font-semibold w-4">Titulo:</label>
         <InputText
           id="titulo"
           v-model="serie.titulo"
@@ -74,7 +110,7 @@ async function handleSave() {
         />
       </div>
       <div class="flex items-center gap-4 mb-4">
-        <label for="sinopsis" class="font-semibold w-24">Sinopsis:</label>
+        <label for="sinopsis" class="font-semibold w-4">Sinopsis:</label>
         <InputText
           id="sinopsis"
           v-model="serie.sinopsis"
@@ -84,7 +120,7 @@ async function handleSave() {
         />
       </div>
       <div class="flex items-center gap-4 mb-4">
-        <label for="director" class="font-semibold w-24">Director:</label>
+        <label for="director" class="font-semibold w-4">Director:</label>
         <InputText
           id="director"
           v-model="serie.director"
@@ -94,9 +130,9 @@ async function handleSave() {
         />
       </div>
       <div class="flex items-center gap-4 mb-4">
-        <label for="temporadas" class="font-semibold w-24">Temporadas:</label>
+        <label for="temporadas" class="font-semibold w-4">Temporadas:</label>
         <InputNumber
-          id="sinopsis"
+          id="temporadas"
           v-model="serie.temporadas"
           class="flex-auto"
           autocomplete="off"
@@ -104,13 +140,13 @@ async function handleSave() {
         />
       </div>
       <div class="flex items-center gap-4 mb-4">
-        <label for="fechaestreno" class="font-semibold w-24">Fecha de Estreno:</label>
-        <Calendar
-          id="sinopsis"
+        <label for="fechaestreno" class="font-semibold w-6">Fecha de Estreno:</label>
+        <DatePicker
+          id="fechaEstreno"
           v-model="serie.fechaEstreno"
-          class="flex-auto"
-          autocomplete="off"
-          autofocus
+          showIcon
+          fluid
+          iconDisplay="input"
         />
       </div>
       <div class="flex justify-end gap-2">
