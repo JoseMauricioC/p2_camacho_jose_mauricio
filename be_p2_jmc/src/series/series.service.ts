@@ -22,6 +22,7 @@ export class SeriesService {
     if (existe) throw new ConflictException('La serie ya existe');
 
     const serie = new Series();
+    serie.idPais = createSeriesDto.idPais;
     serie.titulo = createSeriesDto.titulo.trim();
     serie.sinopsis = createSeriesDto.sinopsis.trim();
     serie.director = createSeriesDto.director.trim();
@@ -30,13 +31,29 @@ export class SeriesService {
     return this.seriesRepository.save(serie);
   }
 
-  async findAll() {
-    return this.seriesRepository.find();
+  async findAll(): Promise<Series[]> {
+    return this.seriesRepository.find({
+      relations: { paises: true },
+      select: {
+        id: true,
+        titulo: true,
+        sinopsis: true,
+        director: true,
+        temporadas: true,
+        fechaEstreno: true,
+        paises: { id: true, descripcion: true },
+      },
+    });
   }
 
   async findOne(id: number): Promise<Series> {
-    const serie = await this.seriesRepository.findOneBy({ id });
-    if (!serie) throw new NotFoundException('La serie no existe');
+    const serie = await this.seriesRepository.findOne({
+      where: { id },
+      relations: { paises: true },
+    });
+
+    if (!serie) throw new NotFoundException('la serie no existe');
+
     return serie;
   }
 
