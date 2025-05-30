@@ -1,20 +1,18 @@
 <script setup lang="ts">
-import SeriesList from '@/components/serie/SeriesList.vue'
-import SeriesSave from '@/components/serie/SeriesSave.vue'
 import { Button } from 'primevue'
 import { ref } from 'vue'
 
 const mostrarDialog = ref(false)
-const serieListRef = ref<typeof SerieList | null>(null)
+const paisListRef = ref<typeof PaisList | null>(null)
 
-const serieEdit = ref<any>(null)
+const paisEdit = ref<any>(null)
 function handleCreate() {
-  serieEdit.value = null
+  paisEdit.value = null
   mostrarDialog.value = true
 }
 
-function handleEdit(serie: any) {
-  serieEdit.value = serie
+function handleEdit(pais: any) {
+  paisEdit.value = pais
   mostrarDialog.value = true
 }
 
@@ -23,19 +21,19 @@ function handleCloseDialog() {
 }
 
 function handleGuardar() {
-  serieListRef.value?.obtenerLista()
+  paisListRef.value?.obtenerLista()
 }
 </script>
 
 <template>
   <div>
-    <h1>Series</h1>
+    <h1>Paises</h1>
     <Button label="Crear Nuevo" icon="pi pi-plus" @click="handleCreate" class="col-3" />
-    <SeriesList ref="serieListRef" @edit="handleEdit" />
+    <SeriesList ref="paisListRef" @edit="handleEdit" />
     <SeriesSave
       :mostrar="mostrarDialog"
-      :serie="serieEdit"
-      :modoEdicion="!!serieEdit"
+      :serie="paisEdit"
+      :modoEdicion="!!paisEdit"
       @guardar="handleGuardar"
       @close="handleCloseDialog"
     />

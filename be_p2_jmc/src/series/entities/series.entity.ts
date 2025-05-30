@@ -18,6 +18,9 @@ export class Series {
   @Column('integer', { name: 'id_pais' })
   idPais: number;
 
+  @Column('varchar', { name: 'tipo_clacificacion', default: '' })
+  tipoClasificacion: string;
+
   @Column({ type: 'varchar', length: 250 })
   titulo: string;
 

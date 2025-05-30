@@ -12,9 +12,18 @@ import { Pais } from 'src/paises/entities/pais.entity';
 
 export class CreateSeriesDto {
   @ApiProperty()
-  @IsDefined({ message: 'El campo idArtista debe estar definido' })
-  @IsInt({ message: 'El campo idArtista debe ser de tipo numérico' })
+  @IsDefined({ message: 'El campo idPais debe estar definido' })
+  @IsInt({ message: 'El campo idPais debe ser de tipo numérico' })
   readonly idPais: Pais['id'];
+
+  @ApiProperty()
+  @IsNotEmpty({ message: 'El campo es obligatorio' })
+  @IsString({ message: 'El campo debe ser de tipo cadena' })
+  @MaxLength(10, {
+    message: 'El campo no debe ser mayor a 10 caracteres',
+  })
+  readonly tipoClasificacion: string;
+
   @ApiProperty()
   @IsNotEmpty({ message: 'El campo titulo es obligatorio' })
   @IsString({ message: 'El campo titulo debe ser de tipo cadena' })

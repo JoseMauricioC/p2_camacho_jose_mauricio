@@ -43,10 +43,18 @@ watch(
   },
 )
 
+const clasificaciones = [
+  { name: 'A', value: 'A' },
+  { name: 'B', value: 'B' },
+  { name: 'B15', value: 'B15' },
+  { name: 'C', value: 'C' },
+]
+
 async function handleSave() {
   try {
     const body = {
-      idPais: serie.value.paises.id,
+      idPais: serie.value.paises?.id,
+      tipoClasificacion: serie.value.tipoClasificacion,
       titulo: serie.value.titulo,
       sinopsis: serie.value.sinopsis,
       director: serie.value.director,
@@ -72,8 +80,11 @@ watch(
     if (nuevoValor) {
       obtenerPaises()
 
-      if (props.serie.id) {
+      if (props.serie?.id) {
         serie.value = { ...props.serie }
+        pais.value.id = serie.value.paises.id
+      } else {
+        pais.value = { id: 0 } as Pais
       }
     }
   },
@@ -88,7 +99,7 @@ watch(
       style="width: 25rem"
     >
       <div class="flex items-center gap-4 mb-4">
-        <label for="pais" class="font-semibold w-3">Paises:</label>
+        <label for="pais" class="font-semibold w-3">Descripcion del Pais:</label>
         <Select
           id="pais"
           v-model="serie.paises.id"
@@ -97,6 +108,17 @@ watch(
           optionValue="id"
           class="flex-auto"
           autofocus
+        />
+      </div>
+      <div class="flex items-center gap-4 mb-4">
+        <label for="tipoClasificacion" class="font-semibold w-4">Tipo Clasificacion</label>
+        <Select
+          id="tipoClasificacion"
+          v-model="serie.tipoClasificacion"
+          :options="clasificaciones"
+          optionLabel="name"
+          optionValue="value"
+          class="w-full md:w-56"
         />
       </div>
       <div class="flex items-center gap-4 mb-4">

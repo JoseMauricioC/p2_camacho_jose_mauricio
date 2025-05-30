@@ -23,6 +23,7 @@ export class SeriesService {
 
     const serie = new Series();
     serie.idPais = createSeriesDto.idPais;
+    serie.tipoClasificacion = createSeriesDto.tipoClasificacion;
     serie.titulo = createSeriesDto.titulo.trim();
     serie.sinopsis = createSeriesDto.sinopsis.trim();
     serie.director = createSeriesDto.director.trim();
@@ -36,6 +37,7 @@ export class SeriesService {
       relations: { paises: true },
       select: {
         id: true,
+        tipoClasificacion: true,
         titulo: true,
         sinopsis: true,
         director: true,
